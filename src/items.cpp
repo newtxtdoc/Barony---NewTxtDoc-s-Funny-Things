@@ -2494,6 +2494,9 @@ void useItem(Item* item, const int player, Entity* usedBy, bool unequipForDroppi
 		case RING_TELEPORTATION:
 			equipItemResult = equipItem(item, &stats[player]->ring, player, checkInventorySpaceForPaperDoll);
 			break;
+		case RING_PERMANENTPOLYMORPH:
+			item_RingPermanentPolymorph(item, player);
+			break;
 		case SPELLBOOK_FORCEBOLT:
 		case SPELLBOOK_MAGICMISSILE:
 		case SPELLBOOK_COLD:

@@ -1130,14 +1130,6 @@ void initClass(const int player)
 			item2 = itemPickup(player, item);
 			free(item);
 
-			item = newItem(SCROLL_SUMMONJOE, SERVICABLE, 3, 6, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-			
-			item = newItem(SCROLL_SUMMONJOE, SERVICABLE, -1, 6, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
 			item = newItem(SCROLL_REMOVECURSE, SERVICABLE, 1, 6, 0, true, nullptr);
 			item2 = itemPickup(player, item);
 			free(item);
@@ -1147,6 +1139,18 @@ void initClass(const int player)
 			free(item);
 
 			item = newItem(SCROLL_MAIL, SERVICABLE, 1, 6, 0, true, nullptr);
+			item2 = itemPickup(player, item);
+			free(item);
+
+			item = newItem(RING_PERMANENTPOLYMORPH, SERVICABLE, 1, 1, 0, true, nullptr);
+			item2 = itemPickup(player, item);
+			free(item);
+
+			item = newItem(SCROLL_SUMMONJOE, SERVICABLE, 2, 1, 0, true, nullptr);
+			item2 = itemPickup(player, item);
+			free(item);
+
+			item = newItem(SCROLL_SUMMONJOE, SERVICABLE, -2, 1, 0, true, nullptr);
 			item2 = itemPickup(player, item);
 			free(item);
 

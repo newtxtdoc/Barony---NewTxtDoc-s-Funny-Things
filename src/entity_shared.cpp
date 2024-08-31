@@ -497,6 +497,7 @@ char itemNameStrings[NUM_ITEM_STRINGS][32] =
 	"scroll_summonjoe",
 	"scroll_conjuremoldycheese",
 	"scroll_enchantmail",
+	"ring_permanentpolymorph",
 	""
 };
 
@@ -744,6 +745,7 @@ char itemStringsByType[10][NUM_ITEM_STRINGS_BY_TYPE][32] =
 		"ring_levitation",
 		"ring_regeneration",
 		"ring_teleportation",
+		"ring_permanentpolymorph",
 		""
 	},
 	{

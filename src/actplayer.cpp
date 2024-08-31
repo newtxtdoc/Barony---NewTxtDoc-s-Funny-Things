@@ -6308,9 +6308,9 @@ void actPlayer(Entity* my)
 						messagePlayer(PLAYER_NUM, MESSAGE_STATUS, Language::get(574)); // "The water extinguishes the flames!"
 						serverUpdateEntityFlag(my, BURNING);
 					}
-					if ( stats[PLAYER_NUM]->EFFECTS[EFF_POLYMORPH] )
+					if ( stats[PLAYER_NUM]->EFFECTS[EFF_POLYMORPH] && !stats[PLAYER_NUM]->EFFECTS[EFF_POLYMORPH_PERMANENCE])
 					{
-						if ( stats[PLAYER_NUM]->EFFECTS[EFF_POLYMORPH] )
+						if ( stats[PLAYER_NUM]->EFFECTS[EFF_POLYMORPH] && !stats[PLAYER_NUM]->EFFECTS[EFF_POLYMORPH_PERMANENCE])
 						{
 							my->setEffect(EFF_POLYMORPH, false, 0, true);
 							my->effectPolymorph = 0;

@@ -348,6 +348,8 @@ void Stat::clearStats()
 	this->HUNGER = 1000;
 	this->LVL = 1;
 	this->EXP = 0;
+
+	//modded
 	list_FreeAll(&this->FOLLOWERS);
 	for (x = 0; x < std::max(NUMPROFICIENCIES, NUMEFFECTS); x++)
 	{

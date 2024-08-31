@@ -38,8 +38,8 @@ static char scroll_label[NUMLABELS][512] =
 	"FOOBIE BLETCH",
 	"TEMOV",
 	"GARVEN DEH",
-	"READ ME"
-	"GIB BAB UGH"
-	"DARBIG RIMBY"
+	"READ ME",
+	"GIB BAB UGH",
+	"DARBIG RIMBY",
 	"TUPIE BOP"
 };

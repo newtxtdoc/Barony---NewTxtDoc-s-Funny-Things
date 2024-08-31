@@ -135,9 +135,9 @@ bool item_PotionWater(Item*& item, Entity* entity, Entity* usedBy)
 		}
 		if ( player >= 0 && player < MAXPLAYERS )
 		{
-			if ( stats && stats->EFFECTS[EFF_POLYMORPH] )
+			if ( stats && stats->EFFECTS[EFF_POLYMORPH] && !stats->EFFECTS[EFF_POLYMORPH_PERMANENCE])
 			{
-				if ( stats->EFFECTS[EFF_POLYMORPH] )
+				if ( stats->EFFECTS[EFF_POLYMORPH] && !stats->EFFECTS[EFF_POLYMORPH_PERMANENCE])
 				{
 					entity->setEffect(EFF_POLYMORPH, false, 0, true);
 					entity->effectPolymorph = 0;
@@ -5058,6 +5058,54 @@ void item_FoodTin(Item*& item, int player)
 	}
 
 	consumeItem(item, player);
+}
+
+/*** void item_RingPermanentPolymorph(Item* item, int player)
+{
+	if (!players[player]->isLocalPlayer())
+	{
+		consumeItem(item, player);
+	}
+	
+	stats[player]->ring = NULL;
+
+	int random = rand() % 13 + 1;
+	Monster typeran = getMonsterFromPlayerRace(random);
+
+	stats[player]->playerRace = random;
+
+
+	if (!players[player]->isLocalPlayer())
+	{
+		return;
+	}
+
+	consumeItem(item, player);
+	
+	messagePlayer(player, MESSAGE_INVENTORY, Language::get(7003));
+}**/
+
+void item_RingPermanentPolymorph(Item* item, int player)
+{
+	if (!players[player]->isLocalPlayer())
+	{
+		consumeItem(item, player);
+	}
+
+	stats[player]->ring = NULL;
+	stats[player]->EFFECTS[EFF_POLYMORPH_PERMANENCE] = true;
+
+	spellEffectPolymorph(players[player]->entity, players[player]->entity, false, -1);
+
+	if (!players[player]->isLocalPlayer())
+	{
+		return;
+	}
+
+	consumeItem(item, player);
+
+	messagePlayer(player, MESSAGE_INVENTORY, Language::get(7003));
+
 }
 
 void item_AmuletSexChange(Item* item, int player)

@@ -351,10 +351,11 @@ typedef enum ItemType
 	HAT_HOOD_WHISPERS,
 	SCROLL_ENCHANTMAIL,
 	SCROLL_CONJUREMOLDYCHEESE,
-	SCROLL_SUMMONJOE
+	SCROLL_SUMMONJOE,
+	RING_PERMANENTPOLYMORPH
 
 } ItemType;
-const int NUMITEMS = 332;
+const int NUMITEMS = 333;
 
 //NOTE: If you change this, make sure to update NUMCATEGORIES in game.h to reflect the total number of categories. Not doing that will make bad things happen.
 typedef enum Category
@@ -646,6 +647,9 @@ void item_FoodAutomaton(Item*& item, int player);
 void item_Gem(Item* item, int player);
 void item_Spellbook(Item*& item, int player);
 void item_ToolLootBag(Item*& item, int player);
+
+//Modded Functions (after the scrolls)
+void item_RingPermanentPolymorph(Item* item, int player);
 
 //General functions.
 Item* newItem(ItemType type, Status status, Sint16 beatitude, Sint16 count, Uint32 appearance, bool identified, list_t* inventory);
