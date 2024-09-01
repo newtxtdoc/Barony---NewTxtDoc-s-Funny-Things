@@ -2516,7 +2516,7 @@ void actMonster(Entity* my)
 	// levitation
 	bool levitating = isLevitating(myStats);
 
-	if ( myStats->type == MINOTAUR )
+	if ( myStats->type == MINOTAUR && !my->flags[USERFLAG2])
 	{
 		int c;
 		for ( c = 0; c < MAXPLAYERS; c++ )
@@ -4066,6 +4066,10 @@ void actMonster(Entity* my)
 						case LICH_FIRE:
 						case LICH_ICE:
 						case MINOTAUR:
+							if (myTarget->flags[USERFLAG2])
+							{
+								myTarget->monsterAcquireAttackTarget(*my, MONSTER_STATE_PATH);
+							}
 							break;
 						default:
 							myTarget->monsterAcquireAttackTarget(*my, MONSTER_STATE_PATH);
@@ -4588,9 +4592,9 @@ void actMonster(Entity* my)
 			}
 
 			// minotaurs and liches chase players relentlessly.
-			if (myReflex)
+			if (myReflex && !my->flags[USERFLAG2])
 			{
-				if (myStats->type == MINOTAUR 
+				if (myStats->type == MINOTAUR
 					|| myStats->type == LICH 
 					|| myStats->type == LICH_FIRE 
 					|| myStats->type == LICH_ICE 
@@ -6123,7 +6127,7 @@ timeToGoAgain:
 			}
 
 			// minotaurs and liches chase players relentlessly.
-			if ( myStats->type == MINOTAUR 
+			if ( myStats->type == MINOTAUR && !my->flags[USERFLAG2]
 				|| (myStats->type == LICH && my->monsterSpecialTimer <= 0)
 				|| ((myStats->type == LICH_FIRE || myStats->type == LICH_ICE) && my->monsterSpecialTimer <= 0 )
 				|| (myStats->type == CREATURE_IMP && strstr(map.name, "Boss") && !my->monsterAllyGetPlayerLeader())

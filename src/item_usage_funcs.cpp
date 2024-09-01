@@ -3806,24 +3806,35 @@ void item_ScrollSummon(Item* item, int player)
 	playSoundEntity(players[player]->entity, 153, 64);
 	Uint32 numCreatures = 1;
 	Monster creature = RAT;
-
-	if (item->beatitude <= -2)
+	if (item->beatitude <= -3)
+	{
+		// spawn something really nasty
+		numCreatures = item->beatitude+4;
+		creature = MINOTAUR;
+	}
+	else if (item->beatitude == -2)
 	{
 		// spawn something really nasty
 		numCreatures = 1;
-		switch (local_rng.rand() % 4)
+		switch (local_rng.rand() % 5)
 		{
 			case 0:
-				creature = MINOTAUR;
+				creature = VAMPIRE;
 				break;
 			case 1:
 				creature = DEMON;
 				break;
 			case 2:
 				creature = CREATURE_IMP;
+				numCreatures = 2;
 				break;
 			case 3:
 				creature = TROLL;
+				numCreatures = 2;
+				break;
+			case 4:
+				creature = MINOTAUR;
+				numCreatures = 1;
 				break;
 		}
 	}
@@ -3861,7 +3872,7 @@ void item_ScrollSummon(Item* item, int player)
 	else if (item->beatitude == 0)
 	{
 		// spawn weak monster ally
-		switch (local_rng.rand() % 3)
+		switch (local_rng.rand() % 8)
 		{
 			case 0:
 				creature = RAT;
@@ -3875,6 +3886,26 @@ void item_ScrollSummon(Item* item, int player)
 				creature = SLIME;
 				numCreatures = local_rng.rand() % 2 + 1;
 				break;
+			case 3:
+				creature = GOBLIN;
+				numCreatures = local_rng.rand() % 2 + 1;
+				break;
+			case 4:
+				creature = SCORPION;
+				numCreatures = local_rng.rand() % 2 + 1;
+				break;
+			case 5:
+				creature = SPIDER;
+				numCreatures = 1;
+				break;
+			case 6:
+				creature = SUCCUBUS;
+				numCreatures = 1;
+				break;
+			case 7:
+				creature = GNOME;
+				numCreatures = 1;
+				break;
 		}
 	}
 	else if (item->beatitude == 1)
@@ -3883,10 +3914,10 @@ void item_ScrollSummon(Item* item, int player)
 		creature = HUMAN;
 		numCreatures = local_rng.rand() % 3 + 1;
 	}
-	else if (item->beatitude >= 2)
+	else if (item->beatitude >= 2 && item->beatitude < 5)
 	{
 		//Spawn many/neat allies
-		switch (local_rng.rand() % 3)
+		switch (local_rng.rand() % 5)
 		{
 			case 0:
 				// summon zap brigadiers
@@ -3902,7 +3933,24 @@ void item_ScrollSummon(Item* item, int player)
 				// summon shopkeeper
 				numCreatures = 1;
 				creature = SHOPKEEPER;
+				break;
+			case 3:
+				// summon crystal golem
+				numCreatures = 1;
+				creature = CRYSTALGOLEM;
+				break;
+			case 4:
+				numCreatures = 1;
+				creature = COCKATRICE;
+				break;
 		}
+	}
+	else if (item->beatitude >= 5)
+	{
+		//friendly minotaur
+		numCreatures = 1;
+		creature = MINOTAUR;
+
 	}
 
 	int i;

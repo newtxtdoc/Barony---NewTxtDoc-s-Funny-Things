@@ -1146,11 +1146,7 @@ void initClass(const int player)
 			item2 = itemPickup(player, item);
 			free(item);
 
-			item = newItem(SCROLL_SUMMONJOE, SERVICABLE, 2, 1, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
-			item = newItem(SCROLL_SUMMONJOE, SERVICABLE, -2, 1, 0, true, nullptr);
+			item = newItem(SCROLL_SUMMON, SERVICABLE, 5, 1, 0, true, nullptr);
 			item2 = itemPickup(player, item);
 			free(item);
 
