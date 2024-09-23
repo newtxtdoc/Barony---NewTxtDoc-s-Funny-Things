@@ -1301,6 +1301,28 @@ void setupSpells()   ///TODO: Verify this function.
 	element = (spellElement_t*)node->element;
 	element->node = node;
 
+	spellConstructor(&spell_steamBlast);
+	strcpy(spell_steamBlast.spell_internal_name, "spell_steamBlast");
+	spell_steamBlast.ID = SPELL_STEAM_BLAST;
+	spell_steamBlast.difficulty = 25;
+	spell_steamBlast.elements.first = NULL;
+	spell_steamBlast.elements.last = NULL;
+	node = list_AddNodeLast(&spell_steamBlast.elements);
+	node->element = copySpellElement(&spellElement_missile);
+	node->size = sizeof(spellElement_t);
+	node->deconstructor = &spellElementDeconstructor;
+	element = (spellElement_t*)node->element;
+	element->node = node; //Tell the element what list it resides in.
+	//Now for the second element.
+	element->elements.first = NULL;
+	element->elements.last = NULL;
+	node = list_AddNodeLast(&element->elements);
+	node->element = copySpellElement(&spellElement_force);
+	node->size = sizeof(spellElement_t);
+	node->deconstructor = &spellElementDeconstructor;
+	element = (spellElement_t*)node->element;
+	element->node = node;
+
 	spellConstructor(&spell_ghost_bolt);
 	strcpy(spell_ghost_bolt.spell_internal_name, "spell_ghost_bolt");
 	spell_ghost_bolt.ID = SPELL_GHOST_BOLT;

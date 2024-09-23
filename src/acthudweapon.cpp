@@ -1332,6 +1332,14 @@ void actHudWeapon(Entity* my)
 						{
 							HUDWEAPON_CHOP = 13;
 						}
+						else if (itemCategory(item) == MAGICSTAFF && item->type == GUN_STEAMBLASTER)
+						{
+							input.consumeBinaryToggle("Attack");
+							players[HUDWEAPON_PLAYERNUM]->entity->attack(2, 1, nullptr);
+							HUDWEAPON_PITCH =+ -2.5;
+							HUDWEAPON_MOVEX =+ 5;
+							HUDWEAPON_MOVEX =+ -5;
+						}
 						else if (itemCategory(item) == MAGICSTAFF)
 						{
 							HUDWEAPON_CHOP = 7; // magicstaffs lunge
@@ -2370,8 +2378,7 @@ void actHudWeapon(Entity* my)
 					{
 						HUDWEAPON_CHOP = 1;
 					}
-					else
-					{
+					else {
 						HUDWEAPON_CHOP = 7;
 					}
 				}
@@ -2666,6 +2673,58 @@ void actHudWeapon(Entity* my)
 			{
 				HUDWEAPON_CHOP = 0;
 			}
+		}
+	}
+	else if (HUDWEAPON_CHOP == 16)     // gun!
+	{
+		HUDWEAPON_MOVEX -= .35;
+		if (HUDWEAPON_MOVEX < 0)
+		{
+			HUDWEAPON_MOVEX = 0;
+		}
+		HUDWEAPON_MOVEY -= .45;
+		if (HUDWEAPON_MOVEY < -1)
+		{
+			HUDWEAPON_MOVEY = -1;
+		}
+		HUDWEAPON_MOVEZ -= .25;
+		if (HUDWEAPON_MOVEZ < -2)
+		{
+			HUDWEAPON_MOVEZ = -2;
+		}
+		if (HUDWEAPON_ROLL < -2 * PI / 5)
+		{
+			HUDWEAPON_ROLL = -2 * PI / 5;
+			if (
+				HUDWEAPON_MOVEX == 0 && HUDWEAPON_MOVEY == -1 && (HUDWEAPON_MOVEZ == -2))
+			{
+				if (!swingweapon)
+				{
+					HUDWEAPON_CHOP++;
+					if (!bearTrap)
+					{
+						if (stats[HUDWEAPON_PLAYERNUM]->weapon && hideWeapon)
+						{
+							players[HUDWEAPON_PLAYERNUM]->entity->attack(1, HUDWEAPON_CHARGE, nullptr);
+						}
+						else
+						{
+							players[HUDWEAPON_PLAYERNUM]->entity->attack(3, HUDWEAPON_CHARGE, nullptr);
+						}
+					}
+					if (stats[HUDWEAPON_PLAYERNUM]->weapon
+						&& (stats[HUDWEAPON_PLAYERNUM]->weapon->type == CROSSBOW || stats[HUDWEAPON_PLAYERNUM]->weapon->type == HEAVY_CROSSBOW))
+					{
+						throwGimpTimer = 40; // fix for swapping weapon to crossbow while charging.
+					}
+					HUDWEAPON_CHARGE = 0;
+					HUDWEAPON_OVERCHARGE = 0;
+				}
+				else
+				{
+					HUDWEAPON_CHARGE = std::min<real_t>(HUDWEAPON_CHARGE + 1, MAXCHARGE);
+				}
+			} 
 		}
 	}
 	else if ( HUDWEAPON_CHOP == CROSSBOW_CHOP_RELOAD_START )     // crossbow reload

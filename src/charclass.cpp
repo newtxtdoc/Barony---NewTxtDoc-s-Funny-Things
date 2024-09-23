@@ -1126,27 +1126,7 @@ void initClass(const int player)
 			free(item);
 
 			//test stuff
-			item = newItem(SCROLL_SUMMON, SERVICABLE, 0, 6, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
-			item = newItem(SCROLL_REMOVECURSE, SERVICABLE, 1, 6, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
-			item = newItem(SCROLL_ENCHANTMAIL, SERVICABLE, 0, 6, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
-			item = newItem(SCROLL_MAIL, SERVICABLE, 1, 6, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
-			item = newItem(RING_PERMANENTPOLYMORPH, SERVICABLE, 1, 1, 0, true, nullptr);
-			item2 = itemPickup(player, item);
-			free(item);
-
-			item = newItem(SCROLL_SUMMON, SERVICABLE, 5, 1, 0, true, nullptr);
+			item = newItem(GUN_STEAMBLASTER, SERVICABLE, 0, 1, 0, true, nullptr);
 			item2 = itemPickup(player, item);
 			free(item);
 

@@ -6195,6 +6195,9 @@ void GenericGUIMenu::enchantItem(Item* item)
 	{
 		return;
 	}
+	if (itemEffectItemBeatitude < 0) {
+		item->beatitude += itemEffectItemBeatitude;
+	}
 	item->beatitude += itemEffectItemBeatitude + 1;
 	messagePlayer(gui_player, MESSAGE_MISC, Language::get(7002), item->description());
 	closeGUI();
@@ -9264,7 +9267,14 @@ bool GenericGUIMenu::tinkeringGetItemValue(const Item* item, int* metal, int* ma
 			*metal = 1;
 			*magic = 4;
 			break;
-
+		case GUN_ARCANECORE:
+			*metal = 4;
+			*magic = 6;
+			break;
+		case GUN_STEAMBLASTER:
+			*metal = 2;
+			*magic = 4;
+			break;
 		case MASK_MOUTH_ROSE:
 		case MASK_GRASS_SPRIG:
 			*metal = 0;
@@ -9495,7 +9505,10 @@ bool GenericGUIMenu::tinkeringGetItemValue(const Item* item, int* metal, int* ma
 			*metal = 4;
 			*magic = 4;
 			break;
-
+		case HAT_MIMIC_CROWN:
+			*metal = 4;
+			*magic = 8;
+			break;
 		case MASK_PHANTOM:
 		case HAT_TURBAN:
 			*metal = 2;

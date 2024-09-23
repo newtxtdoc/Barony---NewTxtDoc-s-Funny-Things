@@ -498,6 +498,9 @@ char itemNameStrings[NUM_ITEM_STRINGS][32] =
 	"scroll_conjuremoldycheese",
 	"scroll_enchantmail",
 	"ring_permanentpolymorph",
+	"gun_arcanecore",
+	"gun_steamblaster",
+	"hat_mimic_crown"
 	""
 };
 

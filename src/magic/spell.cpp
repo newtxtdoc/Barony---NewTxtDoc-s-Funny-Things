@@ -130,6 +130,8 @@ spell_t spell_flutter;
 spell_t spell_dash;
 spell_t spell_polymorph;
 spell_t spell_ghost_bolt;
+spell_t spell_steamBlast;
+spell_t spell_arcaneCore;
 
 bool addSpell(int spell, int player, bool ignoreSkill)
 {
@@ -921,6 +923,12 @@ spell_t* getSpellFromID(int ID)
 			break;
 		case SPELL_GHOST_BOLT:
 			spell = &spell_ghost_bolt;
+			break;
+		case SPELL_ARCANE_CORE:
+			spell = &spell_arcaneCore;
+			break;
+		case SPELL_STEAM_BLAST:
+			spell = &spell_steamBlast;
 			break;
 		default:
 			break;

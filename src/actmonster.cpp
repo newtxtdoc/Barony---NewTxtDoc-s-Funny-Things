@@ -1566,6 +1566,11 @@ bool makeFollower(int monsterclicked, bool ringconflict, char namesays[64],
 				tryAlly = true;
 			}
 		}
+		if (stats[monsterclicked]->helmet && stats[monsterclicked]->helmet->type == HAT_MIMIC_CROWN) {
+			if (race == MIMIC) {
+				tryAlly = true;
+			}
+		}
 		else if ( strcmp(myStats->name, "") && !monsterNameIsGeneric(*myStats)
 			&& ((stats[monsterclicked]->getModifiedProficiency(PRO_LEADERSHIP) + stats[monsterclicked]->CHR) < 60) )
 		{
@@ -6774,7 +6779,7 @@ timeToGoAgain:
 							}*/
 						}
 						my->monsterState = MONSTER_STATE_WAIT; // no path, return to wait state
-						if ( !target && myStats->type == MIMIC )
+						if ( !target && myStats->type == MIMIC && !my->monsterAllyGetPlayerLeader() )
 						{
 							mimicResetIdle(my);
 						}

@@ -2228,6 +2228,7 @@ void useItem(Item* item, const int player, Entity* usedBy, bool unequipForDroppi
 		case HAT_HOOD_APPRENTICE:
 		case HAT_HOOD_ASSASSIN:
 		case HAT_HOOD_WHISPERS:
+		case HAT_MIMIC_CROWN:
 			equipItemResult = equipItem(item, &stats[player]->helmet, player, checkInventorySpaceForPaperDoll);
 			break;
 		case AMULET_SEXCHANGE:
@@ -2478,6 +2479,8 @@ void useItem(Item* item, const int player, Entity* usedBy, bool unequipForDroppi
 		case MAGICSTAFF_SUMMON:
 		case MAGICSTAFF_CHARM:
 		case MAGICSTAFF_POISON:
+		case GUN_STEAMBLASTER:
+		case GUN_ARCANECORE:
 			equipItemResult = equipItem(item, &stats[player]->weapon, player, checkInventorySpaceForPaperDoll);
 			break;
 		case RING_ADORNMENT:
@@ -3973,7 +3976,8 @@ bool Item::doesItemProvideBeatitudeAC(ItemType type)
 			|| type == HAT_BYCOCKET
 			|| type == HAT_CIRCLET
 			|| type == HAT_CIRCLET_WISDOM
-			|| type == HAT_CROWN 
+			|| type == HAT_CROWN
+			|| type == HAT_MIMIC_CROWN
 			|| type == HAT_LAURELS 
 			|| type == HAT_TURBAN
 			)
@@ -4660,6 +4664,10 @@ Sint32 Item::armorGetAC(const Stat* const wielder) const
 	else if ( type == SPIKED_GAUNTLETS )
 	{
 		armor += 3;
+	}
+	else if ( type == HAT_MIMIC_CROWN) //mimic crown ac increase
+	{
+		armor += 2;
 	}
 	//armor *= (double)(item->status/5.0);
 

@@ -2007,9 +2007,12 @@ Entity* castSpell(Uint32 caster_uid, spell_t* spell, bool using_magicstaff, bool
 			Stat* casterStats = caster->getStats();
 			if ( !trap && !using_magicstaff && casterStats && casterStats->EFFECTS[EFF_MAGICAMPLIFY] )
 			{
-				if ( spell->ID == SPELL_FIREBALL || spell->ID == SPELL_COLD || spell->ID == SPELL_LIGHTNING || spell->ID == SPELL_MAGICMISSILE )
+				if ( spell->ID == SPELL_FIREBALL || spell->ID == SPELL_COLD || spell->ID == SPELL_LIGHTNING || spell->ID == SPELL_MAGICMISSILE || spell->ID == SPELL_STEAM_BLAST)
 				{
 					missile_speed *= 0.75;
+					if (spell->ID == SPELL_STEAM_BLAST) {
+						missile_speed *= 2.25;
+					}
 					missileEntity->vel_x = cos(missileEntity->yaw) * (missile_speed);
 					missileEntity->vel_y = sin(missileEntity->yaw) * (missile_speed);
 					missileEntity->actmagicProjectileArc = 1;
@@ -2043,7 +2046,11 @@ Entity* castSpell(Uint32 caster_uid, spell_t* spell, bool using_magicstaff, bool
 					volume = 64;
 				}
 			}
-			
+			if (!strcmp(spell->spell_internal_name, spell_steamBlast.spell_internal_name))
+			{
+				traveltime = 40;
+				missileEntity->skill[5] = traveltime;
+			}
 			if ( !strcmp(spell->spell_internal_name, spell_acidSpray.spell_internal_name) )
 			{
 				traveltime = 15;
@@ -2234,6 +2241,10 @@ Entity* castSpell(Uint32 caster_uid, spell_t* spell, bool using_magicstaff, bool
 				if (propulsion == PROPULSION_MISSILE)
 				{
 					missileEntity->sprite = 173;
+				}
+				if (!strcmp(spell->spell_internal_name, spell_steamBlast.spell_internal_name))
+				{
+					missileEntity->sprite = 1326;
 				}
 
 				// !-- DONT MODIFY element->damage since this affects every subsequent spellcast, removing this aspect as unnecessary 05/04/22
@@ -2664,6 +2675,10 @@ int spellGetCastSound(spell_t* spell)
 	if ( !spell )
 	{
 		return 0;
+	}
+	if (!strcmp(spell->spell_internal_name, spell_steamBlast.spell_internal_name))
+	{
+		return 164;
 	}
 	if ( !strcmp(spell->spell_internal_name, spell_fireball.spell_internal_name) )
 	{

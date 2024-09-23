@@ -80,6 +80,8 @@ void freeSpells()
 	list_FreeAll(&spell_dash.elements);
 	list_FreeAll(&spell_polymorph.elements);
 	list_FreeAll(&spell_ghost_bolt.elements);
+	list_FreeAll(&spell_steamBlast.elements);
+	list_FreeAll(&spell_arcaneCore.elements);
 }
 
 void spell_magicMap(int player)

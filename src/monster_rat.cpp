@@ -55,7 +55,7 @@ void initRat(Entity* my, Stat* myStats)
 
 			// boss variants
 			const bool boss =
-			    rng.rand() % 15 == 0 && //changed: og 50
+			    rng.rand() % 20 == 0 && //changed: og 50
 			    !my->flags[USERFLAG2] &&
 			    !myStats->MISC_FLAGS[STAT_FLAG_DISABLE_MINIBOSS];
 			if ( (boss || (*cvar_summonBosses && conductGameChallenges[CONDUCT_CHEATS_ENABLED])) && myStats->leader_uid == 0 )

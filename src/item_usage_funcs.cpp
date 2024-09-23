@@ -3809,7 +3809,7 @@ void item_ScrollSummon(Item* item, int player)
 	if (item->beatitude <= -3)
 	{
 		// spawn something really nasty
-		numCreatures = item->beatitude+4;
+		numCreatures = (item->beatitude * -1) - 2;
 		creature = MINOTAUR;
 	}
 	else if (item->beatitude == -2)
@@ -3940,6 +3940,7 @@ void item_ScrollSummon(Item* item, int player)
 				creature = CRYSTALGOLEM;
 				break;
 			case 4:
+				// summon cockatrice
 				numCreatures = 1;
 				creature = COCKATRICE;
 				break;
@@ -5152,7 +5153,7 @@ void item_RingPermanentPolymorph(Item* item, int player)
 
 	consumeItem(item, player);
 
-	messagePlayer(player, MESSAGE_INVENTORY, Language::get(7003));
+	messagePlayer(player, MESSAGE_INVENTORY, Language::get(6401));
 
 }
 

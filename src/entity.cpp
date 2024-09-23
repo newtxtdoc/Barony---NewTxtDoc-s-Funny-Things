@@ -6891,6 +6891,9 @@ void Entity::attack(int pose, int charge, Entity* target)
 						case MAGICSTAFF_POISON:
 							castSpell(uid, &spell_poison, true, false);
 							break;
+						case GUN_STEAMBLASTER:
+							castSpell(uid, &spell_steamBlast, true, false);
+							break;
 						default:
 							messagePlayer(player, MESSAGE_DEBUG | MESSAGE_MISC, "This is my wish stick! Wishy wishy wish!");
 							break;
@@ -6913,9 +6916,30 @@ void Entity::attack(int pose, int charge, Entity* target)
 							}
 						}
 					}
-
-					if ( (local_rng.rand() % 3 == 0 && degradeWeapon && !(svFlags & SV_FLAG_HARDCORE)) || forceDegrade
-						|| ((svFlags & SV_FLAG_HARDCORE) && local_rng.rand() % 6 == 0 && degradeWeapon) )
+					if ((local_rng.rand() % 20 == 0 && myStats->weapon->type == GUN_STEAMBLASTER)) {
+						if (player >= 0 && players[player]->isLocalPlayer())
+						{
+							if (myStats->weapon->count > 1)
+							{
+								newItem(myStats->weapon->type, myStats->weapon->status, myStats->weapon->beatitude, myStats->weapon->count - 1, myStats->weapon->appearance, myStats->weapon->identified, &myStats->inventory);
+							}
+						}
+						myStats->weapon->count = 1;
+						myStats->weapon->status = static_cast<Status>(myStats->weapon->status == 0);
+						messagePlayer(player, MESSAGE_EQUIPMENT, "Your device runs out of steam.");
+						if (player > 0 && multiplayer == SERVER && !players[player]->isLocalPlayer())
+						{
+							strcpy((char*)net_packet->data, "ARMR");
+							net_packet->data[4] = 5;
+							net_packet->data[5] = myStats->weapon->status;
+							net_packet->address.host = net_clients[player == 0].host;
+							net_packet->address.port = net_clients[player == 0].port;
+							net_packet->len = 6;
+							sendPacketSafe(net_sock, -1, net_packet, player == 0);
+						}
+					}
+					else if ( (local_rng.rand() % 3 == 0 && degradeWeapon && !(svFlags & SV_FLAG_HARDCORE)) && !(myStats->weapon->type == GUN_STEAMBLASTER) || forceDegrade
+						|| ((svFlags & SV_FLAG_HARDCORE) && local_rng.rand() % 6 == 0 && degradeWeapon) && !(myStats->weapon->type == GUN_STEAMBLASTER))
 					{
 						if ( player >= 0 && players[player]->isLocalPlayer() )
 						{
@@ -9387,6 +9411,88 @@ void Entity::attack(int pose, int charge, Entity* target)
 									*slot = NULL;
 								}
 								if ( armor->node )
+								{
+									list_RemoveNode(armor->node);
+								}
+								else
+								{
+									free(armor);
+								}
+							}
+						}
+					}
+					else if (myStats->type == MIMIC && myStats->GOLD == 1000)
+					{
+						Item* armor = nullptr;
+						int armornum = 0;
+						if (behavior == &actPlayer
+							|| (hit.entity->behavior == &actMonster
+								&& ((hit.entity->monsterAllySummonRank != 0 && hitstats->type == SKELETON)
+									|| hit.entity->monsterIsTinkeringCreation())))
+						{
+							armor = nullptr;
+						}
+						else
+						{
+							if (hitstats->defending && hitstats->shield && itemCategory(hitstats->shield) == ARMOR)
+							{
+								// try eat shield
+								armornum = hitstats->pickRandomEquippedItem(&armor, true, false, true, true);
+								if (!armor)
+								{
+									armornum = hitstats->pickRandomEquippedItem(&armor, true, false, false, false);
+								}
+							}
+							else
+							{
+								armornum = hitstats->pickRandomEquippedItem(&armor, true, false, false, false);
+							}
+						}
+						if (armor != nullptr)
+						{
+							int qty = 1;
+							int startCount = armor->count;
+							if (itemTypeIsQuiver(armor->type))
+							{
+								qty = armor->count;
+								armor->count = 0;
+							}
+							else
+							{
+								armor->count--;
+							}
+							if (hit.entity->behavior == &actPlayer && playerhit >= 0)
+							{
+								steamStatisticUpdateClient(playerhit, STEAM_STAT_I_NEEDED_THAT, STEAM_STAT_INT, 1);
+							}
+							messagePlayer(playerhit, MESSAGE_COMBAT, Language::get(6085), armor->getName());
+							Item* stolenArmor = newItem(armor->type, armor->status, armor->beatitude, qty, armor->appearance, armor->identified, &myStats->inventory);
+							stolenArmor->ownerUid = hit.entity->getUID();
+							stolenArmor->isDroppable = armor->isDroppable;
+							if (playerhit > 0 && multiplayer == SERVER && !players[playerhit]->isLocalPlayer())
+							{
+								strcpy((char*)net_packet->data, "STLA");
+								net_packet->data[4] = armornum;
+								SDLNet_Write32(static_cast<Uint32>(armor->type), &net_packet->data[5]);
+								SDLNet_Write32(static_cast<Uint32>(armor->status), &net_packet->data[9]);
+								SDLNet_Write32(static_cast<Uint32>(armor->beatitude), &net_packet->data[13]);
+								SDLNet_Write32(static_cast<Uint32>(startCount), &net_packet->data[17]);
+								SDLNet_Write32(static_cast<Uint32>(armor->appearance), &net_packet->data[21]);
+								net_packet->data[25] = armor->identified;
+								net_packet->address.host = net_clients[playerhit - 1].host;
+								net_packet->address.port = net_clients[playerhit - 1].port;
+								net_packet->len = 26;
+								sendPacketSafe(net_sock, -1, net_packet, playerhit - 1);
+							}
+
+							if (armor->count <= 0)
+							{
+								Item** slot = itemSlot(hitstats, armor);
+								if (slot)
+								{
+									*slot = NULL;
+								}
+								if (armor->node)
 								{
 									list_RemoveNode(armor->node);
 								}
@@ -12558,6 +12664,12 @@ bool Entity::checkEnemy(Entity* your)
 			{
 				result = ShopkeeperPlayerHostility.isPlayerEnemy(this->skill[2]);
 			}
+			else if (yourStats->type == MIMIC && behavior == &actPlayer)
+			{
+				if (myStats->helmet->type == HAT_MIMIC_CROWN) {
+					result = false;
+				}
+			}
 			else if ( behavior == &actPlayer && myStats->type != HUMAN )
 			{
 				result = swornenemies[HUMAN][yourStats->type];
@@ -12753,6 +12865,18 @@ bool Entity::checkEnemy(Entity* your)
 				else if ( !(your->behavior == &actPlayer && your->effectShapeshift != NOTHING)
 					&& yourStats->mask && yourStats->mask->type == MASK_SPOOKY
 					&& (myStats->type == GHOUL || myStats->type == SHADOW) && behavior == &actMonster )
+				{
+					result = false;
+				}
+				else if (!(your->behavior == &actPlayer && your->effectShapeshift != NOTHING)
+					&& yourStats->helmet && yourStats->helmet->type == HAT_MIMIC_CROWN
+					&& (myStats->type == MIMIC) && behavior == &actMonster)
+				{
+					result = false;
+				}
+				else if (!(behavior == &actPlayer && effectShapeshift != NOTHING)
+					&& myStats->helmet && myStats->helmet->type == HAT_MIMIC_CROWN
+					&& (yourStats->type == MIMIC) && your->behavior == &actMonster)
 				{
 					result = false;
 				}
@@ -13008,6 +13132,12 @@ bool Entity::checkFriend(Entity* your)
 			else if ( yourStats->type == SHOPKEEPER && behavior == &actPlayer )
 			{
 				result = !ShopkeeperPlayerHostility.isPlayerEnemy(this->skill[2]);
+			}
+			else if (yourStats->type == MIMIC && behavior == &actPlayer) {
+				if (myStats->helmet && myStats->helmet->type == HAT_MIMIC_CROWN)
+				{
+					result = true;
+				}
 			}
 			else if ( behavior == &actPlayer && myStats->type != HUMAN )
 			{
@@ -21454,7 +21584,7 @@ int Entity::getHPRestoreOnLevelUp()
 
 	if ( Stat* myStats = getStats() )
 	{
-		if ( myStats->helmet && myStats->helmet->type == HAT_CROWN )
+		if ( myStats->helmet && myStats->helmet->type == HAT_CROWN)
 		{
 			if ( myStats->helmet->beatitude >= 0 || shouldInvertEquipmentBeatitude(myStats) )
 			{
@@ -21480,7 +21610,7 @@ int Entity::getHPRestoreOnLevelUp()
 				if ( Stat* stat = leader->getStats() )
 				{
 					if ( stat->helmet &&
-						(stat->helmet->type == HAT_CROWN) )
+						myStats->helmet->type == HAT_CROWN)
 					{
 						if ( stat->helmet->beatitude >= 0 || shouldInvertEquipmentBeatitude(stat) )
 						{
@@ -21588,7 +21718,7 @@ int Entity::getEntityInspirationFromAllies()
 					if ( stat->helmet &&
 						(stat->helmet->type == HAT_LAURELS
 							|| stat->helmet->type == HAT_TURBAN
-							|| stat->helmet->type == HAT_CROWN) )
+							|| stat->helmet->type == HAT_CROWN || stat->helmet->type == HAT_MIMIC_CROWN) )
 					{
 						if ( stat->LVL >= myStats->LVL )
 						{
@@ -21620,7 +21750,7 @@ int Entity::getEntityInspirationFromAllies()
 						if ( stat->helmet &&
 							(stat->helmet->type == HAT_LAURELS
 								|| stat->helmet->type == HAT_TURBAN
-								|| stat->helmet->type == HAT_CROWN) )
+								|| stat->helmet->type == HAT_CROWN || stat->helmet->type == HAT_MIMIC_CROWN) )
 						{
 							if ( stat->LVL >= myStats->LVL )
 							{
@@ -21656,7 +21786,7 @@ int Entity::getEntityInspirationFromAllies()
 								if ( stat->helmet &&
 									(stat->helmet->type == HAT_LAURELS
 										|| stat->helmet->type == HAT_TURBAN
-										|| stat->helmet->type == HAT_CROWN) )
+										|| stat->helmet->type == HAT_CROWN || stat->helmet->type == HAT_MIMIC_CROWN) )
 								{
 									if ( stat->LVL >= myStats->LVL )
 									{

@@ -23,6 +23,7 @@
 #include "magic/magic.hpp"
 #include "interface/interface.hpp"
 #include "prng.hpp"
+#include "scores.hpp"
 
 void initMimic(Entity* my, Stat* myStats)
 {
@@ -40,6 +41,8 @@ void initMimic(Entity* my, Stat* myStats)
 	}
 
 	my->monsterSpecialState = MIMIC_INERT;
+
+	bool monarchyes = false;
 
 	if ( multiplayer != CLIENT && !MONSTER_INIT )
 	{
@@ -77,6 +80,34 @@ void initMimic(Entity* my, Stat* myStats)
 
 			my->setHardcoreStats(*myStats);
 
+			const bool boss =
+				rng.rand() % 20 == 0 &&
+				!my->flags[USERFLAG2] &&
+				!myStats->MISC_FLAGS[STAT_FLAG_DISABLE_MINIBOSS];
+
+			if ((boss || (*cvar_summonBosses && conductGameChallenges[CONDUCT_CHEATS_ENABLED])) && myStats->leader_uid == 0)
+			{
+				myStats->setAttribute("special_npc", "monarch");
+				strcpy(myStats->name, MonsterData_t::getSpecialNPCName(*myStats).c_str());
+				myStats->MAXHP+= 200;
+				myStats->HP = myStats->MAXHP;
+				myStats->OLDHP = myStats->HP;
+				myStats->STR+= 10;
+				myStats->DEX+= 5;
+				myStats->PER+= 10;
+				myStats->INT += 5;
+				myStats->CHR += 10;
+				myStats->EXP += 100;
+				myStats->LVL += 25;
+				myStats->GOLD = 1000;
+				newItem(HAT_MIMIC_CROWN, EXCELLENT, 2, 1, 0, false, &myStats->inventory);
+				customItemsToGenerate = customItemsToGenerate - 1;
+
+				monarchyes = true;
+			}
+
+			my->setHardcoreStats(*myStats);
+
 			if ( rng.rand() % 10 == 0 )
 			{
 				my->setEffect(EFF_MIMIC_LOCKED, true, -1, false);
@@ -85,7 +116,13 @@ void initMimic(Entity* my, Stat* myStats)
 	}
 
 	// trunk
-	Entity* entity = newEntity(1247, 1, map.entities, nullptr); //Limb entity.
+	Entity* entity;
+	if (monarchyes) {
+		entity = newEntity(1324, 1, map.entities, nullptr); //Limb entity.
+	}
+	else {
+		entity = newEntity(1247, 1, map.entities, nullptr); //Limb entity. 1247
+	}
 	entity->sizex = 2;
 	entity->sizey = 2;
 	entity->skill[2] = my->getUID();
@@ -106,7 +143,12 @@ void initMimic(Entity* my, Stat* myStats)
 	my->bodyparts.push_back(entity);
 
 	// lid
-	entity = newEntity(1248, 1, map.entities, nullptr); //Limb entity.
+	if (monarchyes) {
+		entity = newEntity(1325, 1, map.entities, nullptr); //Limb entity.
+	}
+	else {
+		entity = newEntity(1248, 1, map.entities, nullptr); //Limb entity. 1248
+	}
 	entity->sizex = 2;
 	entity->sizey = 2;
 	entity->skill[2] = my->getUID();
@@ -918,8 +960,13 @@ bool Entity::disturbMimic(Entity* touched, bool takenDamage, bool doMessage)
 	monsterSpecialState = MIMIC_ACTIVE;
 	serverUpdateEntitySkill(this, 33);
 
+	Stat* stats;
 
-	if ( touched )
+	if (touched) {
+		stats = touched->getStats();
+	}
+
+	if ( touched && !(touched->behavior == &actPlayer && stats->helmet && stats->helmet->type == HAT_MIMIC_CROWN))
 	{
 		lookAtEntity(*touched);
 		if ( !uidToEntity(monsterTarget) )

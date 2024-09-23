@@ -74,7 +74,9 @@ static const int SPELL_SELF_POLYMORPH = 52;
 static const int SPELL_CRAB_FORM = 53;
 static const int SPELL_CRAB_WEB = 54;
 static const int SPELL_GHOST_BOLT = 55;
-static const int NUM_SPELLS = 56;
+static const int SPELL_STEAM_BLAST = 56;
+static const int SPELL_ARCANE_CORE = 57;
+static const int NUM_SPELLS = 58;
 
 
 #define SPELLELEMENT_CONFUSE_BASE_DURATION 2//In seconds.
@@ -494,6 +496,8 @@ extern spell_t spell_flutter;
 extern spell_t spell_dash;
 extern spell_t spell_polymorph;
 extern spell_t spell_ghost_bolt;
+extern spell_t spell_steamBlast;
+extern spell_t spell_arcaneCore;
 //TODO: Armor/protection/warding spells.
 //TODO: Targeting method?
 
