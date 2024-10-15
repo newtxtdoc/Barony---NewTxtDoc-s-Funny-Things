@@ -3816,7 +3816,7 @@ void item_ScrollSummon(Item* item, int player)
 	{
 		// spawn something really nasty
 		numCreatures = 1;
-		switch (local_rng.rand() % 5)
+		switch (local_rng.rand() % 6)
 		{
 			case 0:
 				creature = VAMPIRE;
@@ -3834,6 +3834,10 @@ void item_ScrollSummon(Item* item, int player)
 				break;
 			case 4:
 				creature = MINOTAUR;
+				numCreatures = 1;
+				break;
+			case 5:
+				creature = COCKATRICE;
 				numCreatures = 1;
 				break;
 		}

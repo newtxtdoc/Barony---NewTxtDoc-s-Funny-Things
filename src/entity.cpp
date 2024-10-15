@@ -6926,7 +6926,7 @@ void Entity::attack(int pose, int charge, Entity* target)
 						}
 						myStats->weapon->count = 1;
 						myStats->weapon->status = static_cast<Status>(myStats->weapon->status == 0);
-						messagePlayer(player, MESSAGE_EQUIPMENT, "Your device runs out of steam.");
+						messagePlayer(player, MESSAGE_EQUIPMENT, Language::get(7003));
 						if (player > 0 && multiplayer == SERVER && !players[player]->isLocalPlayer())
 						{
 							strcpy((char*)net_packet->data, "ARMR");

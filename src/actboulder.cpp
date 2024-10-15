@@ -1401,6 +1401,7 @@ void actBoulder(Entity* my)
 #define BOULDERTRAP_FIRED my->skill[0]
 #define BOULDERTRAP_AMBIENCE my->skill[6]
 #define BOULDERTRAPHOLE_INIT my->skill[0]
+#define BOULDERTRAP_START my->skill[0]
 
 void actBoulderTrapHole(Entity* my)
 {
@@ -1555,6 +1556,19 @@ void actBoulderTrapEast(Entity* my)
 {
 	int x, y;
 	int c;
+	if (!my->flags[NEGAJOE] && my->boulderTrapRefireAmount < 1) {
+
+		int moreBouldersChance = rand() & 16;
+		int moreBoulders = 0;
+		if (moreBouldersChance >= 0 && moreBouldersChance <= 3) {
+			moreBoulders = rand() % 2 + 1;
+		}
+		if (moreBouldersChance >= 4 && moreBouldersChance <= 5) {
+			my->flags[JOE] = true;
+		}
+		my->boulderTrapRefireAmount = moreBoulders;
+		my->flags[NEGAJOE] = true;
+	}
 
 	if ( !my->boulderTrapFired )
 	{
@@ -1601,7 +1615,30 @@ void actBoulderTrapEast(Entity* my)
 				}
 			}
 			my->boulderTrapFired = 1;
-
+			if (my->flags[JOE] == true) {
+				int choice = rand() % 6;
+				Monster creature = RAT;
+				if (choice == 0) {
+					creature = HUMAN;
+				}
+				if (choice == 1) {
+					creature = SKELETON;
+				}
+				if (choice == 2) {
+					creature = RAT;
+				}
+				if (choice == 3) {
+					creature = GNOME;
+				}
+				if (choice == 4) {
+					creature = TROLL;
+				}
+				if (choice == 5) {
+					creature = MIMIC;
+				}
+				summonMonsterNoSmoke(creature, my->x, my->y, true);
+				return;
+			}
 			c = 0; // direction
 			x = ((int)(my->x)) >> 4;
 			y = ((int)(my->y)) >> 4;
@@ -1650,6 +1687,19 @@ void actBoulderTrapSouth(Entity* my)
 {
 	int x, y;
 	int c;
+	if (!my->flags[NEGAJOE] && my->boulderTrapRefireAmount < 1) {
+
+		int moreBouldersChance = rand() & 16;
+		int moreBoulders = 0;
+		if (moreBouldersChance >= 0 && moreBouldersChance <= 3) {
+			moreBoulders = rand() % 2 + 1;
+		}
+		if (moreBouldersChance >= 4 && moreBouldersChance <= 5) {
+			my->flags[JOE] = true;
+		}
+		my->boulderTrapRefireAmount = moreBoulders;
+		my->flags[NEGAJOE] = true;
+	}
 
 	if ( !my->boulderTrapFired )
 	{
@@ -1696,6 +1746,30 @@ void actBoulderTrapSouth(Entity* my)
 				}
 			}
 			my->boulderTrapFired = 1;
+			if (my->flags[JOE] == true) {
+				int choice = rand() % 6;
+				Monster creature = RAT;
+				if (choice == 0) {
+					creature = HUMAN;
+				}
+				if (choice == 1) {
+					creature = SKELETON;
+				}
+				if (choice == 2) {
+					creature = RAT;
+				}
+				if (choice == 3) {
+					creature = GNOME;
+				}
+				if (choice == 4) {
+					creature = TROLL;
+				}
+				if (choice == 5) {
+					creature = MIMIC;
+				}
+				summonMonsterNoSmoke(creature, my->x, my->y, true);
+				return;
+			}
 
 			c = 1; // direction
 			x = ((int)(my->x)) >> 4;
@@ -1745,6 +1819,19 @@ void actBoulderTrapWest(Entity* my)
 {
 	int x, y;
 	int c;
+	if (!my->flags[NEGAJOE] && my->boulderTrapRefireAmount < 1) {
+
+		int moreBouldersChance = rand() & 16;
+		int moreBoulders = 0;
+		if (moreBouldersChance >= 0 && moreBouldersChance <= 3) {
+			moreBoulders = rand() % 2 + 1;
+		}
+		if (moreBouldersChance >= 4 && moreBouldersChance <= 5) {
+			my->flags[JOE] = true;
+		}
+		my->boulderTrapRefireAmount = moreBoulders;
+		my->flags[NEGAJOE] = true;
+	}
 
 	if ( !my->boulderTrapFired )
 	{
@@ -1791,7 +1878,30 @@ void actBoulderTrapWest(Entity* my)
 				}
 			}
 			my->boulderTrapFired = 1;
-
+			if (my->flags[JOE] == true) {
+				int choice = rand() % 6;
+				Monster creature = RAT;
+				if (choice == 0) {
+					creature = HUMAN;
+				}
+				if (choice == 1) {
+					creature = SKELETON;
+				}
+				if (choice == 2) {
+					creature = RAT;
+				}
+				if (choice == 3) {
+					creature = GNOME;
+				}
+				if (choice == 4) {
+					creature = TROLL;
+				}
+				if (choice == 5) {
+					creature = MIMIC;
+				}
+				summonMonsterNoSmoke(creature, my->x, my->y, true);
+				return;
+			}
 			c = 2; // direction
 			x = ((int)(my->x)) >> 4;
 			y = ((int)(my->y)) >> 4;
@@ -1840,7 +1950,20 @@ void actBoulderTrapNorth(Entity* my)
 {
 	int x, y;
 	int c;
+	if (!my->flags[NEGAJOE] && my->boulderTrapRefireAmount < 1) {
 
+		int moreBouldersChance = rand() & 16;
+		int moreBoulders = 0;
+		if (moreBouldersChance >= 0 && moreBouldersChance <= 3) {
+			moreBoulders = rand() % 2 + 1;
+		}
+		if (moreBouldersChance >= 4 && moreBouldersChance <= 5) {
+			my->flags[JOE] = true;
+		}
+		my->boulderTrapRefireAmount = moreBoulders;
+		my->flags[NEGAJOE] = true;
+	}
+ 
 	if ( !my->boulderTrapFired )
 	{
 		my->boulderTrapAmbience--;
@@ -1886,7 +2009,30 @@ void actBoulderTrapNorth(Entity* my)
 				}
 			}
 			my->boulderTrapFired = 1;
-
+			if (my->flags[JOE] == true) {
+				int choice = rand() % 6;
+				Monster creature = RAT;
+				if (choice == 0) {
+					creature = HUMAN;
+				}
+				if (choice == 1) {
+					creature = SKELETON;
+				}
+				if (choice == 2) {
+					creature = RAT;
+				}
+				if (choice == 3) {
+					creature = GNOME;
+				}
+				if (choice == 4) {
+					creature = TROLL;
+				}
+				if (choice == 5) {
+					creature = MIMIC;
+				}
+				summonMonsterNoSmoke(creature, my->x, my->y, true);
+				return;
+			}
 			c = 3; // direction
 			x = ((int)(my->x)) >> 4;
 			y = ((int)(my->y)) >> 4;
